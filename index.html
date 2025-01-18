@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Shop Billing</title>
+    <script src="https://cdn.tailwindcss.com"></script> <!-- Tailwind CDN -->
+    <style>
+        /* Custom styling to adjust the layout */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #e0f7fa; /* Light blue background */
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .total {
+            font-weight: bold;
+            font-size: 1.25rem;
+            color: #4CAF50;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container mt-10">
+    <!-- Shop Name Section (Editable) -->
+    <div class="text-center mb-10">
+        <label for="shopName" class="text-2xl font-bold text-gray-800">Shop Name:</label>
+        <input type="text" id="shopName" value="Pharmacy Swagatam" class="text-xl text-center font-semibold text-gray-700 border-2 border-gray-300 rounded-lg p-2 w-2/3 mx-auto" />
+    </div>
+
+    <!-- Expiry and Manufacturing Dates -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
+        <div class="flex flex-col">
+            <label for="expiryDate" class="text-sm font-semibold text-gray-600 mb-2">Expiry Date:</label>
+            <input type="date" id="expiryDate" class="border border-gray-300 rounded-lg p-2" />
+        </div>
+        <div class="flex flex-col">
+            <label for="manufactureDate" class="text-sm font-semibold text-gray-600 mb-2">Manufacturing Date:</label>
+            <input type="date" id="manufactureDate" class="border border-gray-300 rounded-lg p-2" />
+        </div>
+    </div>
+
+    <!-- Medicine Information Inputs -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-6">
+        <div class="flex flex-col">
+            <label for="medicineName" class="text-sm font-semibold text-gray-600 mb-2">Medicine Name:</label>
+            <input type="text" id="medicineName" placeholder="Enter medicine name" class="border border-gray-300 rounded-lg p-2" />
+        </div>
+
+        <div class="flex flex-col">
+            <label for="medicinePrice" class="text-sm font-semibold text-gray-600 mb-2">Price (₹):</label>
+            <input type="number" id="medicinePrice" placeholder="Enter price" class="border border-gray-300 rounded-lg p-2" />
+        </div>
+
+        <div class="flex flex-col">
+            <label for="medicineQuantity" class="text-sm font-semibold text-gray-600 mb-2">Quantity:</label>
+            <input type="number" id="medicineQuantity" placeholder="Enter quantity" class="border border-gray-300 rounded-lg p-2" />
+        </div>
+    </div>
+
+    <!-- Add Item Button -->
+    <div class="text-center mb-6">
+        <button class="bg-green-500 text-white py-2 px-6 rounded-lg hover:bg-green-600" id="addItemBtn">Add Item</button>
+    </div>
+
+    <!-- Billing Table -->
+    <table class="min-w-full table-auto border-collapse mb-6">
+        <thead>
+            <tr class="bg-gray-100">
+                <th class="py-2 px-4 border text-sm font-semibold text-gray-600">Medicine Name</th>
+                <th class="py-2 px-4 border text-sm font-semibold text-gray-600">Price (₹)</th>
+                <th class="py-2 px-4 border text-sm font-semibold text-gray-600">Quantity</th>
+                <th class="py-2 px-4 border text-sm font-semibold text-gray-600">Total (₹)</th>
+            </tr>
+        </thead>
+        <tbody id="billingTableBody">
+            <!-- Rows will go here -->
+        </tbody>
+    </table>
+
+    <!-- Total Amount Section -->
+    <div class="total text-right">
+        Total Amount: ₹<span id="totalAmount">0</span>
+    </div>
+</div>
+
+<script>
+    // Functionality for adding items to the table and calculating total
+    const addItemButton = document.getElementById("addItemBtn");
+    const billingTableBody = document.getElementById("billingTableBody");
+    const totalAmountElement = document.getElementById("totalAmount");
+
+    let totalAmount = 0;
+
+    addItemButton.addEventListener("click", () => {
+        const medicineName = document.getElementById("medicineName").value;
+        const medicinePrice = parseFloat(document.getElementById("medicinePrice").value);
+        const medicineQuantity = parseInt(document.getElementById("medicineQuantity").value);
+
+        if (medicineName && !isNaN(medicinePrice) && !isNaN(medicineQuantity)) {
+            const itemTotal = medicinePrice * medicineQuantity;
+            totalAmount += itemTotal;
+
+            // Create table row
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                <td class="py-2 px-4 border text-sm text-gray-700">${medicineName}</td>
+                <td class="py-2 px-4 border text-sm text-gray-700">${medicinePrice.toFixed(2)}</td>
+                <td class="py-2 px-4 border text-sm text-gray-700">${medicineQuantity}</td>
+                <td class="py-2 px-4 border text-sm text-gray-700">${itemTotal.toFixed(2)}</td>
+            `;
+            billingTableBody.appendChild(row);
+
+            // Update total amount
+            totalAmountElement.textContent = totalAmount.toFixed(2);
+
+            // Clear input fields
+            document.getElementById("medicineName").value = "";
+            document.getElementById("medicinePrice").value = "";
+            document.getElementById("medicineQuantity").value = "";
+        } else {
+            alert("Please enter valid data for the medicine.");
+        }
+    });
+</script>
+
+</body>
+</html> 
